@@ -19,6 +19,11 @@ resource aws_s3_bucket "static-bucket" {
   acl = "public-read"
   policy = "${data.template_file.bucket-policy.rendered}"
 
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
+
   tags {
     site = "${var.domain_name}"
     owner = "${var.owner}"
