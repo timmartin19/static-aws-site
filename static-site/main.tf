@@ -101,7 +101,7 @@ resource "aws_route53_record" "cloudfront-record" {
   }
 }
 
-resource "aws_route53_record" "cloudfront-record" {
+resource "aws_route53_record" "secondary-record" {
   name = ""
   type = "A"
   zone_id = "${aws_route53_zone.static-zone.zone_id}"
