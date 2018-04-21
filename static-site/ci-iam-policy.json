@@ -5,7 +5,7 @@
             "Sid": "Terraform-${var.bucket_name}",
             "Effect": "Allow",
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${var.bucket_name}/*"
+            "Resource": "arn:aws:s3:::${bucket_name}/*"
         }
     ]
 }
