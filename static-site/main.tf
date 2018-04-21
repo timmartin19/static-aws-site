@@ -25,6 +25,10 @@ resource aws_s3_bucket "static-bucket" {
   }
 }
 
+resource aws_cloudfront_origin_access_identity "static-bucket-origin" {
+  comment = "Static bucket origin for ${var.domain_name}"
+}
+
 resource aws_cloudfront_distribution "static-site" {
   provider = "aws.static"
   aliases = ["${var.domain_name}"]
@@ -39,7 +43,7 @@ resource aws_cloudfront_distribution "static-site" {
     origin_id = "${var.domain_name}"
 
     s3_origin_config {
-      origin_access_identity = "${var.domain_name}"
+      origin_access_identity = "${aws_cloudfront_origin_access_identity.static-bucket-origin.cloudfront_access_identity_path}"
     }
   }
 
