@@ -114,24 +114,6 @@ resource "aws_route53_record" "cloudfront-record" {
   }
 }
 
-resource "aws_route53_record" "secondary-record" {
-  provider = "aws.static"
-  name = ""
-  type = "A"
-  zone_id = "${aws_route53_zone.static-zone.zone_id}"
-  set_identifier = "secondary"
-
-  failover_routing_policy {
-    type = "SECONDARY"
-  }
-
-  alias {
-    name = "${aws_s3_bucket.static-bucket.website_domain}"
-    zone_id = "${aws_s3_bucket.static-bucket.hosted_zone_id}"
-    evaluate_target_health = true
-  }
-}
-
 resource "aws_route53_record" "www-redirect" {
   provider = "aws.static"
   count = "${var.include_www}"
