@@ -1,4 +1,5 @@
 provider aws {
+  alias = "static"
   region = "${var.aws_region}"
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
@@ -13,6 +14,7 @@ data template_file "bucket-policy" {
 }
 
 resource aws_s3_bucket "static-bucket" {
+  provider = "aws.static"
   bucket = "${var.domain_name}"
   acl = "public-read"
   policy = "${data.template_file.bucket-policy.rendered}"
@@ -24,6 +26,7 @@ resource aws_s3_bucket "static-bucket" {
 }
 
 resource aws_cloudfront_distribution "static-site" {
+  provider = "aws.static"
   aliases = ["${var.domain_name}"]
   comment = "Static content for ${var.domain_name}"
   default_root_object = "index.html"
@@ -75,6 +78,7 @@ resource aws_cloudfront_distribution "static-site" {
 }
 
 resource "aws_route53_zone" "static-zone" {
+  provider = "aws.static"
   name = "${var.domain_name}"
 
   tags {
@@ -84,6 +88,7 @@ resource "aws_route53_zone" "static-zone" {
 }
 
 resource "aws_route53_record" "cloudfront-record" {
+  provider = "aws.static"
   name = ""
   type = "A"
   zone_id = "${aws_route53_zone.static-zone.zone_id}"
@@ -102,6 +107,7 @@ resource "aws_route53_record" "cloudfront-record" {
 }
 
 resource "aws_route53_record" "secondary-record" {
+  provider = "aws.static"
   name = ""
   type = "A"
   zone_id = "${aws_route53_zone.static-zone.zone_id}"
@@ -120,6 +126,7 @@ resource "aws_route53_record" "secondary-record" {
 }
 
 resource "aws_route53_record" "www-redirect" {
+  provider = "aws.static"
   count = "${var.include_www}"
   name = "www"
   type = "CNAME"
@@ -137,6 +144,7 @@ data template_file "ci-policy" {
 }
 
 resource "aws_iam_policy" "ci-policy" {
+  provider = "aws.static"
   name = "${var.domain_name}-deploy"
   path = "/"
   description = "CI Policy for ${var.domain_name}. Only allows putting objects into the bucket"
@@ -145,10 +153,12 @@ resource "aws_iam_policy" "ci-policy" {
 }
 
 resource "aws_iam_user" "ci-user" {
+  provider = "aws.static"
   name = "${var.domain_name}-ci"
 }
 
 resource "aws_iam_user_policy_attachment" "ci-policy-attachment" {
+  provider = "aws.static"
   user = "${aws_iam_user.ci-user.name}"
   policy_arn = "${aws_iam_policy.ci-policy.arn}"
 }
