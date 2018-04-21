@@ -92,7 +92,6 @@ resource "aws_route53_record" "cloudfront-record" {
   name = ""
   type = "A"
   zone_id = "${aws_route53_zone.static-zone.zone_id}"
-  ttl = "${var.dns_ttl}"
   set_identifier = "primary"
 
   failover_routing_policy {
@@ -111,7 +110,6 @@ resource "aws_route53_record" "secondary-record" {
   name = ""
   type = "A"
   zone_id = "${aws_route53_zone.static-zone.zone_id}"
-  ttl = "${var.dns_ttl}"
   set_identifier = "secondary"
 
   failover_routing_policy {
